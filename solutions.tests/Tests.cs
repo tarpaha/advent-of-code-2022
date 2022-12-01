@@ -8,7 +8,7 @@ namespace solutions.tests
         {
             get
             {
-                yield return new TestCaseData(null, null, null);
+                yield return new TestCaseData(new day_2022_12_01.app.Solution(), null, null);
             }
         }
         
