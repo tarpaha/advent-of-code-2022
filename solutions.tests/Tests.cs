@@ -8,7 +8,7 @@ public class Tests
     {
         get
         {
-            yield return new TestCaseData(new day_2022_12_01.app.Solution(), 69693, null);
+            yield return new TestCaseData(new day_2022_12_01.app.Solution(), 69693, 200945);
         }
     }
         

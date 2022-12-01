@@ -9,6 +9,10 @@ public static class Solver
 
     public static object Part2(Data data)
     {
-        return null!;
+        return data.Inventories
+            .Select(inventory => inventory.Calories.Sum())
+            .OrderDescending()
+            .Take(3)
+            .Sum();
     }
 }
