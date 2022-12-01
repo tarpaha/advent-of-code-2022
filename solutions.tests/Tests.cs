@@ -1,24 +1,23 @@
 using utils;
 
-namespace solutions.tests
+namespace solutions.tests;
+
+public class Tests
 {
-    public class Tests
+    private static IEnumerable<TestCaseData> SolutionsTestCases
     {
-        private static IEnumerable<TestCaseData> SolutionsTestCases
+        get
         {
-            get
-            {
-                yield return new TestCaseData(new day_2022_12_01.app.Solution(), null, null);
-            }
+            yield return new TestCaseData(new day_2022_12_01.app.Solution(), 69693, null);
         }
+    }
         
-        [TestCaseSource(nameof(SolutionsTestCases))]
-        public void Test(ISolution solution, object? result1, object? result2)
-        {
-            if(result1 != null)
-                Assert.That(solution.SolvePart1(), Is.EqualTo(result1));
-            if(result2 != null)
-                Assert.That(solution.SolvePart2(), Is.EqualTo(result2));
-        }
+    [TestCaseSource(nameof(SolutionsTestCases))]
+    public void Test(ISolution solution, object? result1, object? result2)
+    {
+        if(result1 != null)
+            Assert.That(solution.SolvePart1(), Is.EqualTo(result1));
+        if(result2 != null)
+            Assert.That(solution.SolvePart2(), Is.EqualTo(result2));
     }
 }
