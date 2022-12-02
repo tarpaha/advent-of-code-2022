@@ -16,7 +16,7 @@ public static class Game
         Win
     }
 
-    public static readonly IReadOnlyDictionary<(Shape, Shape), Result> Rules = new Dictionary<(Shape, Shape), Result>
+    public static readonly IReadOnlyDictionary<(Shape player, Shape opponent), Result> Rules = new Dictionary<(Shape, Shape), Result>
     {
         { (Shape.Rock,     Shape.Rock),     Result.Draw  },
         { (Shape.Rock,     Shape.Paper),    Result.Loose },

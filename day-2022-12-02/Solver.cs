@@ -30,10 +30,28 @@ public static class Solver
         { 'C', Game.Shape.Scissors }
     };
 
+    private static readonly IReadOnlyDictionary<char, Game.Result> RoundResult = new Dictionary<char, Game.Result>()
+    {
+        { 'X', Game.Result.Loose },
+        { 'Y', Game.Result.Draw  },
+        { 'Z', Game.Result.Win   }
+    };
+
     private static int PlayRound(Game.Shape player, Game.Shape opponent)
     {
         var shapeScore = ShapeScore[player];
         var roundScore = ResultScore[Game.Rules[(player, opponent)]];
+        return shapeScore + roundScore;
+    }
+
+    private static int PlayRoundWithResult(Game.Shape opponent, Game.Result result)
+    {
+        var player = Game.Rules
+            .Where(kvp => kvp.Key.opponent == opponent && kvp.Value == result)
+            .Select(kvp => kvp.Key.player)
+            .First();
+        var shapeScore = ShapeScore[player];
+        var roundScore = ResultScore[result];
         return shapeScore + roundScore;
     }
     
@@ -47,6 +65,9 @@ public static class Solver
 
     public static object Part2(Data data)
     {
-        return null!;
+        return data.Pairs
+            .Select(pair => (opponent: OpponentShapes[pair.First], result: RoundResult[pair.Second]))
+            .Select(round => PlayRoundWithResult(round.opponent, round.result))
+            .Sum();
     }
 }
