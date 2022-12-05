@@ -12,6 +12,7 @@ public class Tests
             yield return new TestCaseData(new day_2022_12_02.app.Solution(), 13565, 12424);
             yield return new TestCaseData(new day_2022_12_03.app.Solution(), 8123, 2620);
             yield return new TestCaseData(new day_2022_12_04.app.Solution(), 507, 897);
+            yield return new TestCaseData(new day_2022_12_05.app.Solution(), null, null);
         }
     }
         

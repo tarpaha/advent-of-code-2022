@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
+    <RootNamespace>day_2022_12_05.tests</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
@@ -17,12 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\utils\utils.csproj" />
-    <ProjectReference Include="..\day-2022-12-01.app\day-2022-12-01.app.csproj" />
-    <ProjectReference Include="..\day-2022-12-02.app\day-2022-12-02.app.csproj" />
-    <ProjectReference Include="..\day-2022-12-03.app\day-2022-12-03.app.csproj" />
-    <ProjectReference Include="..\day-2022-12-04.app\day-2022-12-04.app.csproj" />
-    <ProjectReference Include="..\day-2022-12-05.app\day-2022-12-05.app.csproj" />
+    <ProjectReference Include="..\day-2022-12-05\day-2022-12-05.csproj" />
   </ItemGroup>
 
 </Project>
