@@ -1,5 +1,5 @@
 namespace day_2022_12_05;
 
-public class Data
-{
-}
+public record Stack(IEnumerable<char> Crates);
+public record Move(int Count, int From, int To);
+public record Data(IEnumerable<Stack> Stacks, IEnumerable<Move> Moves);
