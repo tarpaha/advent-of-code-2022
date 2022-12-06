@@ -4,6 +4,6 @@ public static class Parser
 {
     public static Data Parse(string data)
     {
-        return new Data();
+        return new Data(data);
     }
 }

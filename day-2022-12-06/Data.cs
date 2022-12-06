@@ -1,5 +1,3 @@
 namespace day_2022_12_06;
 
-public class Data
-{
-}
+public record Data(IEnumerable<char> Characters);
