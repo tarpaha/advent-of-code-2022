@@ -4,17 +4,21 @@ public static class Solver
 {
     public static object Part1(Data data)
     {
-        var chars = data.Characters.ToArray();
-        for (var p = 0; p < chars.Length; p++)
-        {
-            if (new HashSet<char>(chars[p..(p + 4)]).Count == 4)
-                return p + 4;
-        }
-        throw new ArgumentException();
+        return MarkerPosition(data.Characters.ToArray(), 4);
     }
 
     public static object Part2(Data data)
     {
-        return null!;
+        return MarkerPosition(data.Characters.ToArray(), 14);
+    }
+
+    private static int MarkerPosition(char[] chars, int markerSize)
+    {
+        for (var p = 0; p < chars.Length; p++)
+        {
+            if (new HashSet<char>(chars[p..(p + markerSize)]).Count == markerSize)
+                return p + markerSize;
+        }
+        throw new ArgumentException();
     }
 }
