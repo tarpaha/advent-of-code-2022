@@ -4,6 +4,7 @@ public class DirectoryEntry
 {
     public string Name { get; }
     public long Size { get; }
+    public long SizeTotal { get; private set; }
     public DirectoryEntry? Parent { get; }
 
     public bool IsDir => Size == 0;
@@ -36,6 +37,26 @@ public class DirectoryEntry
             str += entry.ToString(indent + "  ");
         }
         return str;
+    }
+
+    public void UpdateTotalSize()
+    {
+        SizeTotal = Size;
+        foreach (var entry in _entries)
+        {
+            entry.UpdateTotalSize();
+            SizeTotal += entry.SizeTotal;
+        }
+    }
+
+    public IEnumerable<DirectoryEntry> GetAll()
+    {
+        var result = new List<DirectoryEntry> { this };
+        foreach (var entry in _entries)
+        {
+            result.AddRange(entry.GetAll());
+        }
+        return result;
     }
 }
 
@@ -83,6 +104,7 @@ public static class FileSystem
                     break;
             }
         }
+        root.UpdateTotalSize();
         return root;
     }
 }

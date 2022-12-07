@@ -48,4 +48,16 @@ $ ls
     - k (file, size=7214296)
 "));
     }
+
+    [TestCase("e", 584)]
+    [TestCase("a", 94853)]
+    [TestCase("d", 24933642)]
+    [TestCase("/", 48381165)]
+    public void FileSystem_CalculateTotalSizes_Properly(string directoryName, long sizeTotal)
+    {
+        var directory = FileSystem.CreateFrom(Parser.Parse(Data))
+            .GetAll()
+            .First(entry => entry.Name == directoryName);
+        Assert.That(directory.SizeTotal, Is.EqualTo(sizeTotal));
+    }
 }
