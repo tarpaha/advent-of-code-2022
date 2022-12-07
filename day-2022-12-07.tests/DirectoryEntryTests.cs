@@ -28,9 +28,9 @@ $ ls
 7214296 k";
     
     [Test]
-    public void FileSystem_Creates_Properly()
+    public void DirectoryEntry_Creates_Properly()
     {
-        var root = FileSystem.CreateFrom(Parser.Parse(Data));
+        var root = DirectoryEntry.CreateFrom(Parser.Parse(Data));
         Assert.That(Environment.NewLine + root, Is.EqualTo(@"
 - / (dir)
   - a (dir)
@@ -53,9 +53,9 @@ $ ls
     [TestCase("a", 94853)]
     [TestCase("d", 24933642)]
     [TestCase("/", 48381165)]
-    public void FileSystem_CalculateTotalSizes_Properly(string directoryName, long sizeTotal)
+    public void DirectoryEntry_CalculatesTotalSizes_Properly(string directoryName, long sizeTotal)
     {
-        var directory = FileSystem.CreateFrom(Parser.Parse(Data))
+        var directory = DirectoryEntry.CreateFrom(Parser.Parse(Data))
             .GetAll()
             .First(entry => entry.Name == directoryName);
         Assert.That(directory.SizeTotal, Is.EqualTo(sizeTotal));

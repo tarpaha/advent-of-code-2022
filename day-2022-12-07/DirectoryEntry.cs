@@ -1,4 +1,4 @@
-﻿namespace day_2022_12_07;
+namespace day_2022_12_07;
 
 public class DirectoryEntry
 {
@@ -58,10 +58,7 @@ public class DirectoryEntry
         }
         return result;
     }
-}
-
-public static class FileSystem
-{
+    
     public static DirectoryEntry CreateFrom(Data data)
     {
         var root = new DirectoryEntry(null, "/");
@@ -106,5 +103,5 @@ public static class FileSystem
         }
         root.UpdateTotalSize();
         return root;
-    }
+    }    
 }
