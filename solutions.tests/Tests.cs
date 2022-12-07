@@ -14,6 +14,7 @@ public class Tests
             yield return new TestCaseData(new day_2022_12_04.app.Solution(), 507, 897);
             yield return new TestCaseData(new day_2022_12_05.app.Solution(), "PSNRGBTFT", "BNTZFPMMW");
             yield return new TestCaseData(new day_2022_12_06.app.Solution(), 1625, 2250);
+            yield return new TestCaseData(new day_2022_12_07.app.Solution(), null, null);
         }
     }
         
