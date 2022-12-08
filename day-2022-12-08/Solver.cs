@@ -40,6 +40,49 @@ public static class Solver
 
     public static object Part2(Data data)
     {
-        return null!;
+        var cells = data.Cells;
+        var size = cells.GetLength(0);
+
+        var distances = Task.WhenAll(
+                Task.Run(() => ComputeViewingDistance(cells, +1,  0, size)),
+                Task.Run(() => ComputeViewingDistance(cells, -1,  0, size)),
+                Task.Run(() => ComputeViewingDistance(cells,  0, +1, size)),
+                Task.Run(() => ComputeViewingDistance(cells,  0, -1, size)))
+            .Result
+            .Select(distances => distances.Cast<int>().ToList())
+            .ToList();
+
+        return Enumerable
+            .Range(0, size * size)
+            .Select(id =>
+                distances[0][id] *
+                distances[1][id] *
+                distances[2][id] *
+                distances[3][id])
+            .Max();
+    }
+
+    private static int[,] ComputeViewingDistance(int[,] cells, int dx, int dy, int size)
+    {
+        var distances = new int[size, size];
+        for (var y = 0; y < size; y++)
+        for (var x = 0; x < size; x++)
+            distances[x, y] = ComputeViewingDistance(cells, x, y, dx, dy, size);
+        return distances;
+    }
+
+    private static int ComputeViewingDistance(int[,] cells, int x, int y, int dx, int dy, int size)
+    {
+        var height = cells[x, y];
+        var distance = 0;
+        while (x > 0 && x < size-1 && y > 0 && y < size-1)
+        {
+            distance += 1;
+            x += dx;
+            y += dy;
+            if (cells[x, y] >= height)
+                break;
+        }
+        return distance;
     }
 }
