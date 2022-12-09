@@ -2,7 +2,12 @@ namespace day_2022_12_09;
 
 public static class Solver
 {
-    private struct Position { public int x; public int y; }
+    private struct Position { public int x; public int y;
+        public override string ToString()
+        {
+            return $"{x}, {y}";
+        }
+    }
     
     public static object Part1(Data data)
     {
@@ -11,7 +16,7 @@ public static class Solver
 
     public static object Part2(Data data)
     {
-        return null!;
+        return Move(data, 10);
     }
     
     private static int Move(Data data, int knotsAmount)
@@ -47,6 +52,24 @@ public static class Solver
             }
             uniqueTailPositions.Add(knots[^1]);
         }
+
+        /*var (w, h) = (26, 21);
+        var (xc, yc) = (11, 5);
+        for (var y = h - 1; y >= 0; y--)
+        {
+            for (var x = 0; x < w; x++)
+            {
+                var n = Array.FindIndex(knots, pos => pos.x == x - xc && pos.y == y - yc);
+                Console.Write(n switch
+                {
+                    -1 => ".",
+                     0 => "H",
+                     _  => n.ToString()
+                });
+            }
+            Console.WriteLine();
+        }*/
+        
         return uniqueTailPositions.Count;
     }
 
@@ -122,6 +145,152 @@ public static class Solver
                         directionMoved = Direction.DownRight;
                     }
                 }
+                break;
+            case Direction.UpLeft:
+                if (Math.Abs(ancestor.x - knot.x) > 1 && Math.Abs(ancestor.y - knot.y) > 1)
+                {
+                    knot.x -= 1;
+                    knot.y += 1;
+                    directionMoved = Direction.UpLeft;
+                }
+                else if (Math.Abs(ancestor.x - knot.x) > 1)
+                {
+                    if (ancestor.y == knot.y)
+                    {
+                        knot.x -= 1;
+                        directionMoved = Direction.Left;
+                    }
+                    else
+                    {
+                        knot.x -= 1;
+                        knot.y += 1;
+                        directionMoved = Direction.UpLeft;
+                    }
+                }
+                else if (Math.Abs(ancestor.y - knot.y) > 1)
+                {
+                    if (ancestor.x == knot.x)
+                    {
+                        knot.y += 1;
+                        directionMoved = Direction.Up;
+                    }
+                    else
+                    {
+                        knot.x -= 1;
+                        knot.y += 1;
+                        directionMoved = Direction.UpLeft;
+                    }
+                }
+                break;
+            case Direction.UpRight:
+                if (Math.Abs(ancestor.x - knot.x) > 1 && Math.Abs(ancestor.y - knot.y) > 1)
+                {
+                    knot.x += 1;
+                    knot.y += 1;
+                    directionMoved = Direction.UpRight;
+                }
+                else if (Math.Abs(ancestor.x - knot.x) > 1)
+                {
+                    if (ancestor.y == knot.y)
+                    {
+                        knot.x += 1;
+                        directionMoved = Direction.Right;
+                    }
+                    else
+                    {
+                        knot.x += 1;
+                        knot.y += 1;
+                        directionMoved = Direction.UpRight;
+                    }
+                }
+                else if (Math.Abs(ancestor.y - knot.y) > 1)
+                {
+                    if (ancestor.x == knot.x)
+                    {
+                        knot.y += 1;
+                        directionMoved = Direction.Up;
+                    }
+                    else
+                    {
+                        knot.x += 1;
+                        knot.y += 1;
+                        directionMoved = Direction.UpRight;
+                    }
+                }
+                break;
+            case Direction.DownLeft:
+                if (Math.Abs(ancestor.x - knot.x) > 1 && Math.Abs(ancestor.y - knot.y) > 1)
+                {
+                    knot.x -= 1;
+                    knot.y -= 1;
+                    directionMoved = Direction.DownLeft;
+                }
+                else if (Math.Abs(ancestor.x - knot.x) > 1)
+                {
+                    if (ancestor.y == knot.y)
+                    {
+                        knot.x -= 1;
+                        directionMoved = Direction.Left;
+                    }
+                    else
+                    {
+                        knot.x -= 1;
+                        knot.y -= 1;
+                        directionMoved = Direction.DownLeft;
+                    }
+                }
+                else if (Math.Abs(ancestor.y - knot.y) > 1)
+                {
+                    if (ancestor.x == knot.x)
+                    {
+                        knot.y -= 1;
+                        directionMoved = Direction.Down;
+                    }
+                    else
+                    {
+                        knot.x -= 1;
+                        knot.y -= 1;
+                        directionMoved = Direction.DownLeft;
+                    }
+                }
+                break;
+            case Direction.DownRight:
+                if (Math.Abs(ancestor.x - knot.x) > 1 && Math.Abs(ancestor.y - knot.y) > 1)
+                {
+                    knot.x += 1;
+                    knot.y -= 1;
+                    directionMoved = Direction.DownRight;
+                }
+                else if (Math.Abs(ancestor.x - knot.x) > 1)
+                {
+                    if (ancestor.y == knot.y)
+                    {
+                        knot.x += 1;
+                        directionMoved = Direction.Right;
+                    }
+                    else
+                    {
+                        knot.x += 1;
+                        knot.y -= 1;
+                        directionMoved = Direction.DownRight;
+                    }
+                }
+                else if (Math.Abs(ancestor.y - knot.y) > 1)
+                {
+                    if (ancestor.x == knot.x)
+                    {
+                        knot.y -= 1;
+                        directionMoved = Direction.Down;
+                    }
+                    else
+                    {
+                        knot.x += 1;
+                        knot.y -= 1;
+                        directionMoved = Direction.DownRight;
+                    }
+                }
+                break;
+            case Direction.None:
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(ancestorMoveDirection), ancestorMoveDirection, null);
