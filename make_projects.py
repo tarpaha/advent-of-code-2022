@@ -107,6 +107,8 @@ public class SolverTests
 
 project = sys.argv[1]
 
+os.system(f"git checkout -b {project}")
+
 lib = f"{project}"
 os.system(f"dotnet new classlib --no-restore -o {lib}")
 os.remove(f"{lib}/Class1.cs")
