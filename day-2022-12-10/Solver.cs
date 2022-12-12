@@ -42,6 +42,42 @@ public static class Solver
 
     public static object Part2(Data data)
     {
-        return null!;
+        var crt = Environment.NewLine;
+        var x = 1L;
+        var col = 0;
+        var row = 0;
+        var cycle = 1;
+        foreach (var instruction in data.Instructions)
+        {
+            var instructionCycles = instruction switch
+            {
+                Instruction.Noop => 1,
+                Instruction.AddX => 2,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            for (var i = 0; i < instructionCycles; i++)
+            {
+                crt += Math.Abs(col - x) <= 1 ? '#' : '.';
+                cycle += 1;
+                col += 1;
+                if (col >= 40)
+                {
+                    col = 0;
+                    row += 1;
+                    crt += row < 6 ? Environment.NewLine : "";
+                }
+            }
+            switch (instruction)
+            {
+                case Instruction.Noop:
+                    break;
+                case Instruction.AddX(var v):
+                    x += v;
+                    break;
+            }
+            if (row >= 6)
+                break;
+        }
+        return crt;
     }
 }
