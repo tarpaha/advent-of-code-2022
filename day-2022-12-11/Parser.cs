@@ -11,7 +11,7 @@ public static class Parser
             var lines = monkeyRecord.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
             var items = lines[1]
                 .Split(new[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries)[2..]
-                .Select(n => new Item(int.Parse(n)))
+                .Select(n => new ItemData(int.Parse(n)))
                 .ToList();
             var operationParts = lines[2].Split(' ', StringSplitOptions.RemoveEmptyEntries)[^2..];
             Operation operation = operationParts[0] switch
