@@ -2,8 +2,8 @@
 
 public class Item
 {
-    public long WorryLevel;
-    public Item(long worryLevel)
+    public int WorryLevel;
+    public Item(int worryLevel)
     {
         WorryLevel = worryLevel;
     }
@@ -28,4 +28,27 @@ public class Item
     {
         return WorryLevel.ToString();
     }
+
+    public void InitRemainders(List<int> dividers)
+    {
+        _remainders = dividers.ToDictionary(divider => divider, divider => WorryLevel % divider);
+    }
+    
+    public void ApplyOperationOnRemainders(Operation operation)
+    {
+        foreach (var divider in _remainders!.Keys)
+        {
+            var remainder = _remainders[divider];
+            _remainders[divider] = operation switch
+            {
+                Operation.Add op => (remainder + op.X) % divider,
+                Operation.Mul op => (remainder * op.X) % divider,
+                Operation.Square => (remainder * remainder) % divider,
+                _ => throw new ArgumentOutOfRangeException(nameof(operation), operation, null)
+            };
+        }
+    }
+
+    private Dictionary<int, int>? _remainders;
+    public int Remainder(int divider) => _remainders![divider];
 }

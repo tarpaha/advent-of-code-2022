@@ -4,11 +4,11 @@ public class Monkey
 {
     public IEnumerable<Item> Items => _items; 
     public readonly Operation Operation;
-    public readonly long Divider;
+    public readonly int Divider;
     public readonly int MonkeyTrue;
     public readonly int MonkeyFalse;
 
-    public int Inspects { get; private set; }
+    public long Inspects { get; private set; }
 
     private readonly List<Item> _items;
 
@@ -31,6 +31,12 @@ public class Monkey
     {
         item.ApplyOperation(Operation);
         item.ReduceWorry();
+        Inspects += 1;
+    }
+
+    public void InspectHard(Item item)
+    {
+        item.ApplyOperationOnRemainders(Operation);
         Inspects += 1;
     }
 }

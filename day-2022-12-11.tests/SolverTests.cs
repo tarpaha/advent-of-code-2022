@@ -57,9 +57,21 @@ Monkey 3:
         Assert.That(Solver.Part1(Parser.Parse(Data)), Is.EqualTo(10605));
     }
 
+    [TestCase(1, new [] { 2, 4, 3, 6 })]
+    [TestCase(20, new [] { 99, 97, 8, 103 })]
+    [TestCase(1000, new [] { 5204, 4792, 199, 5192 })]
+    [TestCase(5000, new [] { 26075, 23921, 974, 26000 })]
+    [TestCase(10000, new [] { 52166, 47830, 1938, 52013 })]
+    public void Part2_Inspects(int rounds, int[] inspects)
+    {
+        var monkeys = Parser.Parse(Data).MonkeyDatas.Select(monkeyData => new Monkey(monkeyData)).ToList();
+        Solver.PlayHard(monkeys, rounds);
+        Assert.That(monkeys.Select(monkey => monkey.Inspects), Is.EquivalentTo(inspects));
+    }
+    
     [Test]
     public void Part2()
     {
-        Assert.That(Solver.Part2(Parser.Parse(Data)), Is.Null);
+        Assert.That(Solver.Part2(Parser.Parse(Data)), Is.EqualTo(2713310158));
     }
 }

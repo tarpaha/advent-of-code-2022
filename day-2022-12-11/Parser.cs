@@ -16,11 +16,11 @@ public static class Parser
             var operationParts = lines[2].Split(' ', StringSplitOptions.RemoveEmptyEntries)[^2..];
             Operation operation = operationParts[0] switch
             {
-                "+" => new Operation.Add(long.Parse(operationParts[1])),
+                "+" => new Operation.Add(int.Parse(operationParts[1])),
                 "*" => operationParts[1] switch
                 {
                     "old" => new Operation.Square(),
-                    var x => new Operation.Mul(long.Parse(x)) 
+                    var x => new Operation.Mul(int.Parse(x)) 
                 },
                 _ => throw new ArgumentOutOfRangeException()
             };
