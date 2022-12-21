@@ -41,4 +41,9 @@ public record Data(IEnumerable<Pair> Pairs)
     {
         return string.Join($"{Environment.NewLine}{Environment.NewLine}", Pairs);
     }
+
+    public IEnumerable<Packet> Packets()
+    {
+        return Pairs.SelectMany(pair => new[] { pair.Packet1, pair.Packet2 }).ToList();
+    }
 }
