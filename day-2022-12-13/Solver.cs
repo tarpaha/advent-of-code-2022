@@ -81,6 +81,23 @@ public static class Solver
 
     public static object Part2(Data data)
     {
-        return null!;
+        var packets = data.Packets().ToList();
+        var dividerPacket1 = IntegerPacket(2); 
+        var dividerPacket2 = IntegerPacket(6);
+        packets.Add(dividerPacket1);
+        packets.Add(dividerPacket2);
+        packets.Sort((packet1, packet2) => ComparePackets(packet1, packet2) switch
+        {
+            Result.RightOrder => -1,
+            Result.Same => 0,
+            Result.OutOfOrder => +1,
+            _ => throw new ArgumentOutOfRangeException()
+        });
+        return (packets.IndexOf(dividerPacket1) + 1) * (packets.IndexOf(dividerPacket2) + 1);
+    }
+
+    private static Packet IntegerPacket(int value)
+    {
+        return new Packet(new Element.List(new[] { new Element.List(new[] { new Element.Integer(value) }) }));
     }
 }
