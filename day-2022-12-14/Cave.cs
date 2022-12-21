@@ -2,6 +2,13 @@
 
 public class Cave
 {
+    private enum Material
+    {
+        Air = 0,
+        Rock,
+        Sand
+    }
+    
     private readonly int _initialX;
     private readonly int _initialY;
     
@@ -11,7 +18,7 @@ public class Cave
     private readonly int _width;
     private readonly int _height;
     
-    private readonly int[,] _tiles;
+    private readonly Material[,] _tiles;
     
     public Cave(Data data, int initialX, int initialY)
     {
@@ -23,7 +30,7 @@ public class Cave
         _width = xMax - _xMin + 1;
         _height = yMax - _yMin + 1;
         
-        _tiles = new int[_width, _height];
+        _tiles = new Material[_width, _height];
         FillFromPaths(data);
     }
 
@@ -65,12 +72,46 @@ public class Cave
         };
         while (true)
         {
-            _tiles[start.x - _xMin, start.y - _yMin] = 1;
+            _tiles[start.x - _xMin, start.y - _yMin] = Material.Rock;
             if(start.x == finish.x && start.y == finish.y)
                 break;
             start.x += dx;
             start.y += dy;
         }
+    }
+
+    public bool DropSand()
+    {
+        var (x, y) = (_initialX - _xMin, _initialY - _yMin);
+        while (true)
+        {
+            if (_tiles[x, y + 1] == Material.Air)
+            {
+                y += 1;
+                if (y == _height)
+                    return false;
+                continue;
+            }
+            if (_tiles[x - 1, y + 1] == Material.Air)
+            {
+                x -= 1;
+                y += 1;
+                if (x == 0 || y == _height)
+                    return false;
+                continue;
+            }
+            if (_tiles[x + 1, y + 1] == Material.Air)
+            {
+                x += 1;
+                y += 1;
+                if (x == _width || y == _height)
+                    return false;
+                continue;
+            }
+            break;
+        }
+        _tiles[x, y] = Material.Sand;
+        return true;
     }
 
     public override string ToString()
@@ -85,7 +126,13 @@ public class Cave
                     str += '+';
                     continue;
                 }
-                str += _tiles[x, y] == 1 ? '#' : '.';
+                str += _tiles[x, y] switch
+                {
+                    Material.Air  => '.',
+                    Material.Rock => '#',
+                    Material.Sand => 'o',
+                    _ => throw new ArgumentOutOfRangeException()
+                };
             }
             if(y < _height - 1)
                 str += Environment.NewLine;
