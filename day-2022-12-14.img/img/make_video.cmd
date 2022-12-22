@@ -1,0 +1,1 @@
+ffmpeg -f image2 -framerate 120 -i %%06d.png -c:v libx264 video.mp4

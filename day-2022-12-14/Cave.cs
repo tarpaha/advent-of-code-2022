@@ -2,7 +2,7 @@
 
 public class Cave
 {
-    private enum Material
+    public enum Material
     {
         Air = 0,
         Rock,
@@ -19,6 +19,11 @@ public class Cave
     private readonly int _height;
     
     private readonly Material[,] _tiles;
+
+    public int Width => _width;
+    public int Height => _height;
+
+    public Material GetTile(int x, int y) => _tiles[x, y]; 
     
     public Cave(Data data, int initialX, int initialY)
     {
