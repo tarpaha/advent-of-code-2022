@@ -23,23 +23,21 @@ public class FiniteCave
     public int Width => _width;
     public int Height => _height;
 
-    public Material GetTile(int x, int y) => _tiles[x, y]; 
+    public Material GetTile(int x, int y) => _tiles[x, y];
     
-    public FiniteCave(Data data, int initialX, int initialY, int gapLeft, int gapRight)
+    public FiniteCave(Data data, int initialX, int initialY)
     {
         _initialX = initialX;
         _initialY = initialY;
         
         (_xMin, _yMin, var xMax, var yMax) = GetDimensions(data);
-
-        _xMin -= gapLeft;
-        xMax += gapRight;
-        
-        _width = xMax - _xMin + 1;
         _height = yMax - _yMin + 1;
-
         _height += 2;
-        
+
+        _xMin = initialX - (_height - 1) - 1;
+        xMax = initialX + (_height - 1) + 1;
+        _width = xMax - _xMin + 1;
+
         _tiles = new Material[_width, _height];
         FillFromPaths(data);
         FillFloor();
