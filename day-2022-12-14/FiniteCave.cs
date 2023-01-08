@@ -25,15 +25,15 @@ public class FiniteCave
 
     public Material GetTile(int x, int y) => _tiles[x, y]; 
     
-    public FiniteCave(Data data, int initialX, int initialY, int gap)
+    public FiniteCave(Data data, int initialX, int initialY, int gapLeft, int gapRight)
     {
         _initialX = initialX;
         _initialY = initialY;
         
         (_xMin, _yMin, var xMax, var yMax) = GetDimensions(data);
 
-        _xMin -= gap;
-        xMax += gap;
+        _xMin -= gapLeft;
+        xMax += gapRight;
         
         _width = xMax - _xMin + 1;
         _height = yMax - _yMin + 1;
@@ -73,12 +73,6 @@ public class FiniteCave
         }
     }
 
-    private void FillFloor()
-    {
-        for (var x = 0; x < _width; x++)
-            _tiles[x, _height - 1] = Material.Rock;
-    }
-
     private void FillFromPath((int x, int y) start, (int x, int y) finish)
     {
         var (dx, dy) = (finish.x - start.x, finish.y - start.y) switch
@@ -94,6 +88,31 @@ public class FiniteCave
                 break;
             start.x += dx;
             start.y += dy;
+        }
+    }
+
+    private void FillFloor()
+    {
+        for (var x = 0; x < _width; x++)
+            _tiles[x, _height - 1] = Material.Rock;
+    }
+
+    public void FillWithSand()
+    {
+        _tiles[_initialX - _xMin, _initialY - _yMin] = Material.Sand;
+        for (var y = 1; y < _height; y++)
+        {
+            for (var x = 0; x < _width; x++)
+            {
+                if(_tiles[x, y] != Material.Air)
+                    continue;
+                if ((x > 0 && _tiles[x - 1, y - 1] == Material.Sand) ||
+                    (_tiles[x, y - 1] == Material.Sand) ||
+                    (x < _width - 1 && _tiles[x + 1, y - 1] == Material.Sand))
+                {
+                    _tiles[x, y] = Material.Sand;
+                }
+            }
         }
     }
 
