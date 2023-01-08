@@ -1,176 +1,58 @@
 ﻿namespace day_2022_12_14;
 
-public class FiniteCave
+public class FiniteCave : Cave
 {
-        public enum Material
+    public FiniteCave(Data data, int initialX, int initialY) : base(data, initialX, initialY, GetWidthAndHeight)
     {
-        Air = 0,
-        Rock,
-        Sand
-    }
-    
-    private readonly int _initialX;
-    private readonly int _initialY;
-    
-    private readonly int _xMin;
-    private readonly int _yMin;
-
-    private readonly int _width;
-    private readonly int _height;
-    
-    private readonly Material[,] _tiles;
-
-    public int Width => _width;
-    public int Height => _height;
-
-    public Material GetTile(int x, int y) => _tiles[x, y];
-    
-    public FiniteCave(Data data, int initialX, int initialY)
-    {
-        _initialX = initialX;
-        _initialY = initialY;
-        
-        (_xMin, _yMin, var xMax, var yMax) = GetDimensions(data);
-        _height = yMax - _yMin + 1;
-        _height += 2;
-
-        _xMin = initialX - (_height - 1) - 1;
-        xMax = initialX + (_height - 1) + 1;
-        _width = xMax - _xMin + 1;
-
-        _tiles = new Material[_width, _height];
-        FillFromPaths(data);
         FillFloor();
     }
-
-    private static (int, int, int, int) GetDimensions(Data data)
-    {
-        var (yMin, yMax, xMin, xMax) = (0, int.MinValue, int.MaxValue, int.MinValue);
-        foreach (var path in data.Paths)
-        {
-            foreach (var (x, y) in path.Coords)
-            {
-                if (y > yMax)
-                    yMax = y;
-                if (x < xMin)
-                    xMin = x;
-                if (x > xMax)
-                    xMax = x;
-            }
-        }
-        return (xMin, yMin, xMax, yMax);
-    }
     
-    private void FillFromPaths(Data data)
+    private static (int w, int h, int xMin) GetWidthAndHeight(int initialX, int initialY, int xMin, int yMin, int xMax, int yMax)
     {
-        foreach (var path in data.Paths)
-        {
-            var coords = path.Coords.ToList();
-            for (var i = 1; i < coords.Count; i++)
-                FillFromPath(coords[i - 1], coords[i]);
-        }
-    }
+        var height = yMax - yMin + 1;
+        height += 2;
 
-    private void FillFromPath((int x, int y) start, (int x, int y) finish)
-    {
-        var (dx, dy) = (finish.x - start.x, finish.y - start.y) switch
-        {
-            (var deltaX, 0) => (deltaX > 0 ? 1 : -1, 0),
-            (0, var deltaY) => (0, deltaY > 0 ? 1 : -1),
-            _ => throw new ArgumentOutOfRangeException()
-        };
-        while (true)
-        {
-            _tiles[start.x - _xMin, start.y - _yMin] = Material.Rock;
-            if(start.x == finish.x && start.y == finish.y)
-                break;
-            start.x += dx;
-            start.y += dy;
-        }
+        xMin = initialX - (height - 1) - 1;
+        xMax = initialX + (height - 1) + 1;
+        var width = xMax - xMin + 1;
+        
+        return (width, height, xMin);
     }
 
     private void FillFloor()
     {
-        for (var x = 0; x < _width; x++)
-            _tiles[x, _height - 1] = Material.Rock;
+        for (var x = 0; x < Width; x++)
+            SetTile(x, Height - 1,  Material.Rock);
     }
 
     public void FillWithSand()
     {
-        _tiles[_initialX - _xMin, _initialY - _yMin] = Material.Sand;
-        for (var y = 1; y < _height; y++)
+        var (initialX, initialY) = InitialTile;
+        SetTile(initialX, initialY, Material.Sand);
+        
+        for (var y = 1; y < Height; y++)
         {
-            for (var x = 0; x < _width; x++)
+            for (var x = 0; x < Width; x++)
             {
-                if(_tiles[x, y] != Material.Air)
+                if(GetTile(x, y) != Material.Air)
                     continue;
-                if ((x > 0 && _tiles[x - 1, y - 1] == Material.Sand) ||
-                    (_tiles[x, y - 1] == Material.Sand) ||
-                    (x < _width - 1 && _tiles[x + 1, y - 1] == Material.Sand))
+                if ((x > 0 && GetTile(x - 1, y - 1) == Material.Sand) ||
+                    (GetTile(x, y - 1) == Material.Sand) ||
+                    (x < Width - 1 && GetTile(x + 1, y - 1) == Material.Sand))
                 {
-                    _tiles[x, y] = Material.Sand;
+                    SetTile(x, y, Material.Sand);
                 }
             }
         }
     }
 
-    public bool DropSand()
+    public int SandAmount()
     {
-        var (x, y) = (_initialX - _xMin, _initialY - _yMin);
-        while (true)
-        {
-            if (_tiles[x, y + 1] == Material.Air)
-            {
-                y += 1;
-                if (y == _height)
-                    return false;
-                continue;
-            }
-            if (_tiles[x - 1, y + 1] == Material.Air)
-            {
-                x -= 1;
-                y += 1;
-                if (x == 0 || y == _height)
-                    return false;
-                continue;
-            }
-            if (_tiles[x + 1, y + 1] == Material.Air)
-            {
-                x += 1;
-                y += 1;
-                if (x == _width || y == _height)
-                    return false;
-                continue;
-            }
-            break;
-        }
-        _tiles[x, y] = Material.Sand;
-        return true;
-    }
-
-    public override string ToString()
-    {
-        var str = "";
-        for (var y = 0; y < _height; y++)
-        {
-            for (var x = 0; x < _width; x++)
-            {
-                if (x + _xMin == _initialX && y + _yMin == _initialY)
-                {
-                    str += '+';
-                    continue;
-                }
-                str += _tiles[x, y] switch
-                {
-                    Material.Air  => '.',
-                    Material.Rock => '#',
-                    Material.Sand => 'o',
-                    _ => throw new ArgumentOutOfRangeException()
-                };
-            }
-            if(y < _height - 1)
-                str += Environment.NewLine;
-        }
-        return str;
+        var amount = 0;
+        for(var y = 0; y < Height; y++)
+            for(var x = 0; x < Width; x++)
+                if (GetTile(x, y) == Material.Sand)
+                    amount += 1;
+        return amount;
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace day_2022_12_14.tests;
 
-public class CaveTests
+public class InfiniteCaveTests
 {
     private const string Data = @"
 498,4 -> 498,6 -> 496,6
@@ -19,9 +19,9 @@ public class CaveTests
 #########.";
 
     [Test]
-    public void CaveCreationFromData_Works_Correctly()
+    public void CreationFromData_Works_Correctly()
     {
-        Assert.That(Environment.NewLine + new Cave(Parser.Parse(Data), 500, 0), Is.EqualTo(Cave));
+        Assert.That(Environment.NewLine + new InfiniteCave(Parser.Parse(Data), 500, 0), Is.EqualTo(Cave));
     }
 
     [TestCase(1, @"
@@ -92,7 +92,7 @@ public class CaveTests
 #########.", false)]
     public void DropSand_Works_Correctly(int sandAmount, string caveString, bool rested)
     {
-        var cave = new Cave(Parser.Parse(Data), 500, 0);
+        var cave = new InfiniteCave(Parser.Parse(Data), 500, 0);
         bool finalSandRested = false;
         for(var i = 0; i < sandAmount; i++)
             finalSandRested = cave.DropSand();

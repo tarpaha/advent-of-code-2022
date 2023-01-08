@@ -23,7 +23,6 @@ public class FiniteCaveTests
     [Test]
     public void CreationFromData_Works_Correctly()
     {
-        Console.WriteLine(new FiniteCave(Parser.Parse(Data), 500, 0));
         Assert.That(Environment.NewLine + new FiniteCave(Parser.Parse(Data), 500, 0), Is.EqualTo(Cave));
     }
 

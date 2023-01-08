@@ -1,6 +1,6 @@
 ﻿namespace day_2022_12_14;
 
-public class Cave
+public abstract class Cave
 {
     public enum Material
     {
@@ -17,23 +17,24 @@ public class Cave
 
     private readonly int _width;
     private readonly int _height;
-    
-    private readonly Material[,] _tiles;
 
+    private readonly Material[,] _tiles;
+    
     public int Width => _width;
     public int Height => _height;
-
-    public Material GetTile(int x, int y) => _tiles[x, y]; 
+    public Material GetTile(int x, int y) => _tiles[x, y];
     
-    public Cave(Data data, int initialX, int initialY)
+    protected (int x, int y) InitialTile => (_initialX - _xMin, _initialY - _yMin);
+    protected void SetTile(int x, int y, Material material) => _tiles[x, y] = material;
+
+    protected delegate (int w, int h, int xMin) GetWidthAndHeightDelegate(int initialX, int initialY, int xMin, int yMin, int xMax, int yMax);
+    protected Cave(Data data, int initialX, int initialY, GetWidthAndHeightDelegate getWidthAndHeight)
     {
         _initialX = initialX;
         _initialY = initialY;
         
         (_xMin, _yMin, var xMax, var yMax) = GetDimensions(data);
-        
-        _width = xMax - _xMin + 1;
-        _height = yMax - _yMin + 1;
+        (_width, _height, _xMin) = getWidthAndHeight(_initialX, _initialY, _xMin, _yMin, xMax, yMax);
         
         _tiles = new Material[_width, _height];
         FillFromPaths(data);
@@ -56,7 +57,7 @@ public class Cave
         }
         return (xMin, yMin, xMax, yMax);
     }
-    
+
     private void FillFromPaths(Data data)
     {
         foreach (var path in data.Paths)
@@ -84,41 +85,7 @@ public class Cave
             start.y += dy;
         }
     }
-
-    public bool DropSand()
-    {
-        var (x, y) = (_initialX - _xMin, _initialY - _yMin);
-        while (true)
-        {
-            if (_tiles[x, y + 1] == Material.Air)
-            {
-                y += 1;
-                if (y == _height)
-                    return false;
-                continue;
-            }
-            if (_tiles[x - 1, y + 1] == Material.Air)
-            {
-                x -= 1;
-                y += 1;
-                if (x == 0 || y == _height)
-                    return false;
-                continue;
-            }
-            if (_tiles[x + 1, y + 1] == Material.Air)
-            {
-                x += 1;
-                y += 1;
-                if (x == _width || y == _height)
-                    return false;
-                continue;
-            }
-            break;
-        }
-        _tiles[x, y] = Material.Sand;
-        return true;
-    }
-
+    
     public override string ToString()
     {
         var str = "";
